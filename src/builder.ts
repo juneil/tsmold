@@ -140,7 +140,6 @@ function buildProperty(
         case PATTERN:
             return pattern(value, typeValue);
         case ITEMS:
-            console.log(value);
             return items(value, typeValue);
     }
 }
