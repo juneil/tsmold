@@ -1,9 +1,8 @@
 import { Simple, Required, Min, Max, Items } from '../src/decorators';
-import { extractSchema } from '../src/builder';
-import { Mold } from '../src/mold';
+import { Molder } from '../src/molder';
 
-describe('Number tests', () => {
-    test('Check number property', () => {
+describe('Molder tests', () => {
+    test('Class inheritance', () => {
         class User {
             @Required name: string;
         }
@@ -20,11 +19,9 @@ describe('Number tests', () => {
             @Items(User) more: User[];
         }
 
-        console.dir(
-            require('util').inspect(extractSchema(SubAccount), { showHidden: false, depth: null })
-        );
-
-        const res = Mold.instantiate(SubAccount, { amount: 3, enabledk: 'true', sss: 'ss' });
-        console.log(res);
+        expect(Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss' })).toBe({
+            amount: 3,
+            enabled: true
+        });
     });
 });

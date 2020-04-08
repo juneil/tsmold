@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
+import { TYPE, MOLDER, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
 
 /**
  * defineTypeMetadata
@@ -11,7 +11,7 @@ import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
  * @param key
  */
 function defineTypeMetadata(target: any, key: string): void {
-    const metadata = Reflect.getMetadata(MOLD, target.constructor) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target.constructor) || {};
     if (metadata[key] && metadata[key][TYPE]) {
         return;
     }
@@ -38,12 +38,18 @@ function defineTypeMetadata(target: any, key: string): void {
  * @param value
  */
 function addRule(target: Function, propertyKey: string, rule: string, value: any): void {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target) || {};
     const rules = metadata[propertyKey] || {};
     metadata[propertyKey] = { ...rules, [rule]: value };
-    Reflect.defineMetadata(MOLD, metadata, target);
+    Reflect.defineMetadata(MOLDER, metadata, target);
 }
 
+/**
+ * Create a decorator without argument
+ * Example: @Simple
+ *
+ * @param rule
+ */
 const withoutArg = (rule?: string) => {
     return (target: any, key: string): void => {
         defineTypeMetadata(target, key);
@@ -53,6 +59,12 @@ const withoutArg = (rule?: string) => {
     };
 };
 
+/**
+ * Create a decorator with one argument
+ * Example: @Min(1)
+ *
+ * @param rule
+ */
 const with1Arg = <T>(rule: string) => (value: T) => {
     return (target: any, key: string): void => {
         defineTypeMetadata(target, key);

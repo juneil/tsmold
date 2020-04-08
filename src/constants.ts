@@ -1,9 +1,9 @@
-export const MOLD = Symbol('design:mold');
+export const MOLDER = Symbol('design:molder');
 export const SCHEMA = Symbol('design:schema');
-export const TYPE = 'mold:type';
-export const MAX = 'mold:max';
-export const MIN = 'mold:min';
-export const REQUIRED = 'mold:required';
-export const PATTERN = 'mold:pattern';
-export const FORMAT = 'mold:format';
-export const ITEMS = 'mold:items';
+export const TYPE = 'molder:type';
+export const MAX = 'molder:max';
+export const MIN = 'molder:min';
+export const REQUIRED = 'molder:required';
+export const PATTERN = 'molder:pattern';
+export const FORMAT = 'molder:format';
+export const ITEMS = 'molder:items';

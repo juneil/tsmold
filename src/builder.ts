@@ -1,5 +1,12 @@
-import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS } from './constants';
+import { MOLDER, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS } from './constants';
 
+/**
+ * type
+ *
+ * Get JSON Schema type value
+ *
+ * @param value
+ */
 function type(value: any): Record<string, any> {
     switch (value) {
         case Number:
@@ -20,8 +27,16 @@ function type(value: any): Record<string, any> {
     }
 }
 
-function min(value: number, type: any): Record<string, any> {
-    switch (type) {
+/**
+ * min
+ *
+ * Get JSON Schema min value depending of the data type
+ *
+ * @param value
+ * @param typeValue
+ */
+function min(value: number, typeValue: any): Record<string, any> {
+    switch (typeValue) {
         case Number:
             return { minimum: value };
         case String:
@@ -31,6 +46,14 @@ function min(value: number, type: any): Record<string, any> {
     }
 }
 
+/**
+ * max
+ *
+ * Get JSON Schema max value depending of the data type
+ *
+ * @param value
+ * @param typeValue
+ */
 function max(value: number, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case Number:
@@ -42,6 +65,14 @@ function max(value: number, typeValue: any): Record<string, any> {
     }
 }
 
+/**
+ * pattern
+ *
+ * Get JSON Schema pattern value
+ *
+ * @param value
+ * @param typeValue
+ */
 function pattern(value: string, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case String:
@@ -49,6 +80,14 @@ function pattern(value: string, typeValue: any): Record<string, any> {
     }
 }
 
+/**
+ * items
+ *
+ * Get JSON Schema items value
+ *
+ * @param value
+ * @param typeValue
+ */
 function items(value: any, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case Array:
@@ -56,6 +95,34 @@ function items(value: any, typeValue: any): Record<string, any> {
     }
 }
 
+/**
+ * buildProperty
+ *
+ * Build the JSON Schema value for a class property's rule
+ *
+ * Example:
+ *
+ * class Account {
+ *      @Min(0)
+ *      @Max(9999)
+ *      balance: integer
+ * }
+ *
+ * Each rule will be processed by this function:
+ * buildProperty('balance', TYPE, Number, Account);
+ * buildProperty('balance', MIN, 0, Account);
+ * buildProperty('balance', MAX, 9999, Account);
+ *
+ * As a result:
+ * { type: 'number' }
+ * { minimum: 0 }
+ * { maximum: 9999 }
+ *
+ * @param propertyKey
+ * @param rule
+ * @param value
+ * @param target
+ */
 function buildProperty(
     propertyKey: string,
     rule: string,
@@ -78,21 +145,51 @@ function buildProperty(
     }
 }
 
+/**
+ * hasMetadata
+ *
+ * Check if the class provided has Molder metadata.
+ *
+ * @param target
+ */
 function hasMetadata(target: Function): boolean {
-    return !!Reflect.getMetadata(MOLD, target);
+    return !!Reflect.getMetadata(MOLDER, target);
 }
 
+/**
+ * requiredProperties
+ *
+ * Get the required property key list of a class
+ *
+ * @param target
+ */
 function requiredProperties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target) || {};
     return Object.keys(metadata).filter((key) => ruleValue(REQUIRED, target, key));
 }
 
+/**
+ * rulesByProperty
+ *
+ * Get the rules for a class property
+ *
+ * @param target
+ * @param propertyKey
+ */
 function rulesByProperty(target: Function, propertyKey: string): [string, any][] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target) || {};
     const rules = metadata[propertyKey] || {};
     return Object.entries(rules);
 }
 
+/**
+ * buildProperties
+ *
+ * Build by merging all the JSON Schema values
+ * into one object per property
+ *
+ * @param target
+ */
 function buildProperties(target: Function): Record<string, any> {
     return properties(target)
         .map((key) =>
@@ -103,11 +200,26 @@ function buildProperties(target: Function): Record<string, any> {
         .reduce((acc, cur) => ({ ...acc, ...cur }), {});
 }
 
+/**
+ * properties
+ *
+ * Get the property key list of a class
+ *
+ * @param target
+ */
 export function properties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target) || {};
     return Object.keys(metadata);
 }
 
+/**
+ * extractSchema
+ *
+ * Use all the stored rules in metadata
+ * to build a JSON Schema
+ *
+ * @param target
+ */
 export function extractSchema(target: Function): Record<string, any> {
     return {
         title: target.name,
@@ -118,8 +230,17 @@ export function extractSchema(target: Function): Record<string, any> {
     };
 }
 
+/**
+ * ruleValue
+ *
+ * Get the rule value for provided class and property.
+ *
+ * @param rule
+ * @param target
+ * @param propertyKey
+ */
 export function ruleValue(rule: string, target: Function, propertyKey: string): any {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getMetadata(MOLDER, target) || {};
     const rules = metadata[propertyKey] || {};
     return rules[rule];
 }
