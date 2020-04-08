@@ -19,7 +19,7 @@ describe('Molder tests', () => {
             @Items(User) more: User[];
         }
 
-        expect(Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss' })).toBe({
+        expect(Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss' })).toEqual({
             amount: 3,
             enabled: true
         });
