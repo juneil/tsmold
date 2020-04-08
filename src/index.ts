@@ -1,3 +1,3 @@
 import 'reflect-metadata';
 export * from './decorators';
-export * from './molder';
+export * from './mold';

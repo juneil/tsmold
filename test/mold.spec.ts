@@ -1,5 +1,5 @@
 import { Simple, Required, Min, Max, Items } from '../src/decorators';
-import { Molder } from '../src/molder';
+import { Molder } from '../src/mold';
 
 describe('Molder tests', () => {
     test('Class inheritance', () => {

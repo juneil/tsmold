@@ -1,21 +1,23 @@
 {
-    "name": "molder",
+    "name": "tsmold",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "build": "tsc --build tsconfig.build.json",
+        "clean": "rm -r build/"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/juneil/molder.git"
+        "url": "git+https://github.com/juneil/tsmold.git"
     },
-    "author": "",
+    "author": "Juneil",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/juneil/molder/issues"
+        "url": "https://github.com/juneil/tsmold/issues"
     },
-    "homepage": "https://github.com/juneil/molder#readme",
+    "homepage": "https://github.com/juneil/tsmold#readme",
     "jest": {
         "coverageDirectory": "../coverage",
         "testEnvironment": "node",

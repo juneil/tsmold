@@ -1,4 +1,4 @@
-import { MOLDER, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS } from './constants';
+import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS } from './constants';
 
 /**
  * type
@@ -153,7 +153,7 @@ function buildProperty(
  * @param target
  */
 function hasMetadata(target: Function): boolean {
-    return !!Reflect.getMetadata(MOLDER, target);
+    return !!Reflect.getMetadata(MOLD, target);
 }
 
 /**
@@ -164,7 +164,7 @@ function hasMetadata(target: Function): boolean {
  * @param target
  */
 function requiredProperties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLDER, target) || {};
+    const metadata = Reflect.getMetadata(MOLD, target) || {};
     return Object.keys(metadata).filter((key) => ruleValue(REQUIRED, target, key));
 }
 
@@ -177,7 +177,7 @@ function requiredProperties(target: Function): string[] {
  * @param propertyKey
  */
 function rulesByProperty(target: Function, propertyKey: string): [string, any][] {
-    const metadata = Reflect.getMetadata(MOLDER, target) || {};
+    const metadata = Reflect.getMetadata(MOLD, target) || {};
     const rules = metadata[propertyKey] || {};
     return Object.entries(rules);
 }
@@ -208,7 +208,7 @@ function buildProperties(target: Function): Record<string, any> {
  * @param target
  */
 export function properties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLDER, target) || {};
+    const metadata = Reflect.getMetadata(MOLD, target) || {};
     return Object.keys(metadata);
 }
 
@@ -240,7 +240,7 @@ export function extractSchema(target: Function): Record<string, any> {
  * @param propertyKey
  */
 export function ruleValue(rule: string, target: Function, propertyKey: string): any {
-    const metadata = Reflect.getMetadata(MOLDER, target) || {};
+    const metadata = Reflect.getMetadata(MOLD, target) || {};
     const rules = metadata[propertyKey] || {};
     return rules[rule];
 }

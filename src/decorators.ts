@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TYPE, MOLDER, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
+import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
 
 /**
  * defineTypeMetadata
@@ -11,7 +11,7 @@ import { TYPE, MOLDER, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
  * @param key
  */
 function defineTypeMetadata(target: any, key: string): void {
-    const metadata = Reflect.getMetadata(MOLDER, target.constructor) || {};
+    const metadata = Reflect.getMetadata(MOLD, target.constructor) || {};
     if (metadata[key] && metadata[key][TYPE]) {
         return;
     }
@@ -38,10 +38,10 @@ function defineTypeMetadata(target: any, key: string): void {
  * @param value
  */
 function addRule(target: Function, propertyKey: string, rule: string, value: any): void {
-    const metadata = Reflect.getMetadata(MOLDER, target) || {};
+    const metadata = Reflect.getMetadata(MOLD, target) || {};
     const rules = metadata[propertyKey] || {};
     metadata[propertyKey] = { ...rules, [rule]: value };
-    Reflect.defineMetadata(MOLDER, metadata, target);
+    Reflect.defineMetadata(MOLD, metadata, target);
 }
 
 /**
