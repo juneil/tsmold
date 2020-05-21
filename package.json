@@ -1,11 +1,11 @@
 {
     "name": "tsmold",
-    "version": "1.0.0-alpha.1",
-    "description": "",
+    "version": "1.0.0",
+    "description": "TS Molder, tranform class to json-schema",
     "main": "index.js",
     "scripts": {
         "test": "jest",
-        "build": "tsc --build tsconfig.build.json",
+        "build": "tsc --build tsconfig.build.json && cp package.json build/ && cp README.md build/",
         "clean": "rm -r build/"
     },
     "repository": {
