@@ -1,6 +1,6 @@
 {
     "name": "tsmold",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "TS Molder, tranform class to json-schema",
     "main": "index.js",
     "scripts": {
