@@ -17,8 +17,6 @@ jobs:
                 npm install
                 npm run build
                 cd build/
-                ls -a
-                npm unpublish --force
-              # - run: npm publish --access public
+                npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
