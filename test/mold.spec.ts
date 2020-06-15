@@ -1,4 +1,4 @@
-import { Simple, Required, Min, Max, Items } from '../src/decorators';
+import { Simple, Required, Min, Max, Items, Enum } from '../src/decorators';
 import { Molder } from '../src/mold';
 
 describe('Molder tests', () => {
@@ -13,15 +13,19 @@ describe('Molder tests', () => {
             @Required enabled: boolean;
             @Items(String) list: string[];
             @Simple other: User;
+            @Required @Enum('a', 'b') foo: string;
         }
 
         class SubAccount extends Account {
             @Items(User) more: User[];
         }
 
-        expect(Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss' })).toEqual({
+        expect(
+            Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss', foo: 'b' })
+        ).toEqual({
             amount: 3,
-            enabled: true
+            enabled: true,
+            foo: 'b'
         });
     });
 });

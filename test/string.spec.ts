@@ -1,5 +1,5 @@
-import { Simple, Max, Min } from '../src/decorators';
-import { TYPE, MAX, MIN } from '../src/constants';
+import { Simple, Max, Min, Enum } from '../src/decorators';
+import { TYPE, MAX, MIN, ENUM } from '../src/constants';
 import { ruleValue } from '../src/builder';
 
 describe('String tests', () => {
@@ -18,5 +18,13 @@ describe('String tests', () => {
         expect(ruleValue(TYPE, Account, 'name')).toBe(String);
         expect(ruleValue(MAX, Account, 'name')).toBe(20);
         expect(ruleValue(MIN, Account, 'name')).toBe(1);
+    });
+    test('Check enum values', () => {
+        class Account {
+            @Enum('aa', 'bb', 'cc')
+            name: string;
+        }
+        expect(ruleValue(TYPE, Account, 'name')).toBe(String);
+        expect(ruleValue(ENUM, Account, 'name')).toStrictEqual(['aa', 'bb', 'cc']);
     });
 });

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS } from './constants';
+import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS, ENUM } from './constants';
 
 /**
  * defineTypeMetadata
@@ -72,9 +72,23 @@ const with1Arg = <T>(rule: string) => (value: T) => {
     };
 };
 
+/**
+ * Create a decorator with N arguments
+ * Example: @Enum('a', 'b', ...)
+ *
+ * @param rule
+ */
+const withNArg = <T>(rule: string) => (...values: T[]) => {
+    return (target: any, key: string): void => {
+        defineTypeMetadata(target, key);
+        addRule(target.constructor, key, rule, values);
+    };
+};
+
 export const Simple = withoutArg();
 export const Required = withoutArg(REQUIRED);
 export const Max = with1Arg<number>(MAX);
 export const Min = with1Arg<number>(MIN);
 export const Pattern = with1Arg<string>(PATTERN);
 export const Items = with1Arg<any>(ITEMS);
+export const Enum = withNArg<string>(ENUM);

@@ -1,4 +1,4 @@
-import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS } from './constants';
+import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS, ENUM } from './constants';
 
 /**
  * type
@@ -96,6 +96,22 @@ function items(value: any, typeValue: any): Record<string, any> {
 }
 
 /**
+ * enum
+ *
+ * Get JSON Schema enum values
+ * for type string
+ *
+ * @param value
+ * @param typeValue
+ */
+function enumMapper(value: any, typeValue: any): Record<string, any> {
+    switch (typeValue) {
+        case String:
+            return { enum: [].concat(value).filter(Boolean) };
+    }
+}
+
+/**
  * buildProperty
  *
  * Build the JSON Schema value for a class property's rule
@@ -141,6 +157,8 @@ function buildProperty(
             return pattern(value, typeValue);
         case ITEMS:
             return items(value, typeValue);
+        case ENUM:
+            return enumMapper(value, typeValue);
     }
 }
 

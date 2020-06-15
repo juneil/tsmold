@@ -7,3 +7,4 @@ export const REQUIRED = 'mold:required';
 export const PATTERN = 'mold:pattern';
 export const FORMAT = 'mold:format';
 export const ITEMS = 'mold:items';
+export const ENUM = 'mold:enum';
