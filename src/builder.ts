@@ -1,4 +1,4 @@
-import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS, ENUM } from './constants';
+import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEM, ENUM } from './constants';
 
 /**
  * type
@@ -81,14 +81,14 @@ function pattern(value: string, typeValue: any): Record<string, any> {
 }
 
 /**
- * items
+ * item
  *
- * Get JSON Schema items value
+ * Get JSON Schema item value
  *
  * @param value
  * @param typeValue
  */
-function items(value: any, typeValue: any): Record<string, any> {
+function item(value: any, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case Array:
             return { items: type(value) };
@@ -155,8 +155,8 @@ function buildProperty(
             return max(value, typeValue);
         case PATTERN:
             return pattern(value, typeValue);
-        case ITEMS:
-            return items(value, typeValue);
+        case ITEM:
+            return item(value, typeValue);
         case ENUM:
             return enumMapper(value, typeValue);
     }

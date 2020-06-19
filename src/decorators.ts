@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS, ENUM } from './constants';
+import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEM, ENUM } from './constants';
 
 /**
  * defineTypeMetadata
@@ -11,7 +11,7 @@ import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEMS, ENUM } from './constant
  * @param key
  */
 function defineTypeMetadata(target: any, key: string): void {
-    const metadata = Reflect.getMetadata(MOLD, target.constructor) || {};
+    const metadata = Reflect.getOwnMetadata(MOLD, target.constructor) || {};
     if (metadata[key] && metadata[key][TYPE]) {
         return;
     }
@@ -38,7 +38,7 @@ function defineTypeMetadata(target: any, key: string): void {
  * @param value
  */
 function addRule(target: Function, propertyKey: string, rule: string, value: any): void {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+    const metadata = Reflect.getOwnMetadata(MOLD, target) || {};
     const rules = metadata[propertyKey] || {};
     metadata[propertyKey] = { ...rules, [rule]: value };
     Reflect.defineMetadata(MOLD, metadata, target);
@@ -90,5 +90,5 @@ export const Required = withoutArg(REQUIRED);
 export const Max = with1Arg<number>(MAX);
 export const Min = with1Arg<number>(MIN);
 export const Pattern = with1Arg<string>(PATTERN);
-export const Items = with1Arg<any>(ITEMS);
+export const Item = with1Arg<any>(ITEM);
 export const Enum = withNArg<string>(ENUM);

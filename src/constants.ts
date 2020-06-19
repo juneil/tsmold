@@ -6,5 +6,5 @@ export const MIN = 'mold:min';
 export const REQUIRED = 'mold:required';
 export const PATTERN = 'mold:pattern';
 export const FORMAT = 'mold:format';
-export const ITEMS = 'mold:items';
+export const ITEM = 'mold:item';
 export const ENUM = 'mold:enum';
