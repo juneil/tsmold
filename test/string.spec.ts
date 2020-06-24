@@ -7,7 +7,7 @@ describe('String tests', () => {
         class Account {
             @Simple name: string;
         }
-        expect(ruleValue(TYPE, Account, 'name')).toBe(String);
+        expect(ruleValue(TYPE, [Account], 'name')).toBe(String);
     });
     test('Check min/max value', () => {
         class Account {
@@ -15,16 +15,16 @@ describe('String tests', () => {
             @Min(1)
             name: string;
         }
-        expect(ruleValue(TYPE, Account, 'name')).toBe(String);
-        expect(ruleValue(MAX, Account, 'name')).toBe(20);
-        expect(ruleValue(MIN, Account, 'name')).toBe(1);
+        expect(ruleValue(TYPE, [Account], 'name')).toBe(String);
+        expect(ruleValue(MAX, [Account], 'name')).toBe(20);
+        expect(ruleValue(MIN, [Account], 'name')).toBe(1);
     });
     test('Check enum values', () => {
         class Account {
             @Enum('aa', 'bb', 'cc')
             name: string;
         }
-        expect(ruleValue(TYPE, Account, 'name')).toBe(String);
-        expect(ruleValue(ENUM, Account, 'name')).toStrictEqual(['aa', 'bb', 'cc']);
+        expect(ruleValue(TYPE, [Account], 'name')).toBe(String);
+        expect(ruleValue(ENUM, [Account], 'name')).toStrictEqual(['aa', 'bb', 'cc']);
     });
 });

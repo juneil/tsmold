@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEM, ENUM } from './constants';
+import { PARENT, TYPE, MOLD, MAX, MIN, REQUIRED, PATTERN, ITEM, ENUM } from './constants';
 
 /**
  * defineTypeMetadata
@@ -45,6 +45,17 @@ function addRule(target: Function, propertyKey: string, rule: string, value: any
 }
 
 /**
+ * Add a parent to inherits rules
+ *
+ * @param parent
+ */
+function extendRules(parent: Function) {
+    return (target: Function) => {
+        Reflect.defineMetadata(PARENT, parent, target);
+    };
+}
+
+/**
  * Create a decorator without argument
  * Example: @Simple
  *
@@ -85,6 +96,7 @@ const withNArg = <T>(rule: string) => (...values: T[]) => {
     };
 };
 
+export const ExtendRules = extendRules;
 export const Simple = withoutArg();
 export const Required = withoutArg(REQUIRED);
 export const Max = with1Arg<number>(MAX);

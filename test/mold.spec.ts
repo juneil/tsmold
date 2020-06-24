@@ -1,6 +1,7 @@
-import { Simple, Required, Min, Max, Item, Enum } from '../src/decorators';
+import { Simple, Required, Min, Max, Item, Enum, ExtendRules } from '../src/decorators';
 import { Molder } from '../src/mold';
 import { MOLD } from '../src/constants';
+import { extractSchema } from '../src/builder';
 
 describe('Molder tests', () => {
     test('Class inheritance', () => {
@@ -17,6 +18,7 @@ describe('Molder tests', () => {
             @Required @Enum('a', 'b') foo: string;
         }
 
+        @ExtendRules(Account)
         class SubAccount extends Account {
             @Item(User) more: User[];
         }
@@ -43,22 +45,29 @@ describe('Molder tests', () => {
             @Required @Enum('a', 'b') foo: string;
         }
 
+        @ExtendRules(Account)
         class SubAccount extends Account {
             @Item(User) more: User[];
         }
 
-        class SubAccountBis extends Account {
+        @ExtendRules(SubAccount)
+        class SubAccountBis extends SubAccount {
             @Required data: string;
         }
 
-        console.log('xxx', Reflect.getMetadata(MOLD, SubAccount));
-
         expect(
-            Molder.instantiate(SubAccount, { amount: 3, enabled: 'true', sss: 'ss', foo: 'b' })
+            Molder.instantiate(SubAccountBis, {
+                amount: 3,
+                enabled: 'true',
+                sss: 'ss',
+                foo: 'b',
+                data: 'test'
+            })
         ).toEqual({
             amount: 3,
             enabled: true,
-            foo: 'b'
+            foo: 'b',
+            data: 'test'
         });
     });
 });

@@ -1,5 +1,6 @@
 export const MOLD = Symbol('design:mold');
 export const SCHEMA = Symbol('design:schema');
+export const PARENT = Symbol('design:parent');
 export const TYPE = 'mold:type';
 export const MAX = 'mold:max';
 export const MIN = 'mold:min';

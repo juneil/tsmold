@@ -7,13 +7,13 @@ describe('Number tests', () => {
         class Account {
             @Simple amount: number;
         }
-        expect(ruleValue(TYPE, Account, 'amount')).toBe(Number);
+        expect(ruleValue(TYPE, [Account], 'amount')).toBe(Number);
     });
     test('Check max value', () => {
         class Account {
             @Max(200) amount: number;
         }
-        expect(ruleValue(TYPE, Account, 'amount')).toBe(Number);
-        expect(ruleValue(MAX, Account, 'amount')).toBe(200);
+        expect(ruleValue(TYPE, [Account], 'amount')).toBe(Number);
+        expect(ruleValue(MAX, [Account], 'amount')).toBe(200);
     });
 });
