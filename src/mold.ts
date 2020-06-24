@@ -68,7 +68,7 @@ export class Molder {
      * @param token
      */
     private static getCompiledSchema(token: Function): Ajv.ValidateFunction {
-        let compiledSchema = Reflect.getMetadata(SCHEMA, token);
+        let compiledSchema = Reflect.getOwnMetadata(SCHEMA, token);
         if (!compiledSchema) {
             const ajv = Ajv({ removeAdditional: true, useDefaults: true, coerceTypes: true });
             const schema = extractSchema(token);

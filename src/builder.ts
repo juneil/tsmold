@@ -1,5 +1,6 @@
-import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEMS, ENUM } from './constants';
+import { MOLD, TYPE, REQUIRED, MIN, MAX, PATTERN, ITEM, ENUM, PARENT } from './constants';
 
+const toArray = <T>(val: T): T[] => [].concat(val).filter(Boolean);
 /**
  * type
  *
@@ -81,14 +82,14 @@ function pattern(value: string, typeValue: any): Record<string, any> {
 }
 
 /**
- * items
+ * item
  *
- * Get JSON Schema items value
+ * Get JSON Schema item value
  *
  * @param value
  * @param typeValue
  */
-function items(value: any, typeValue: any): Record<string, any> {
+function item(value: any, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case Array:
             return { items: type(value) };
@@ -107,7 +108,7 @@ function items(value: any, typeValue: any): Record<string, any> {
 function enumMapper(value: any, typeValue: any): Record<string, any> {
     switch (typeValue) {
         case String:
-            return { enum: [].concat(value).filter(Boolean) };
+            return { enum: toArray(value) };
     }
 }
 
@@ -143,7 +144,7 @@ function buildProperty(
     propertyKey: string,
     rule: string,
     value: any,
-    target: Function
+    target: Function[]
 ): Record<string, any> {
     const typeValue = ruleValue(TYPE, target, propertyKey);
     switch (rule) {
@@ -155,8 +156,8 @@ function buildProperty(
             return max(value, typeValue);
         case PATTERN:
             return pattern(value, typeValue);
-        case ITEMS:
-            return items(value, typeValue);
+        case ITEM:
+            return item(value, typeValue);
         case ENUM:
             return enumMapper(value, typeValue);
     }
@@ -174,14 +175,25 @@ function hasMetadata(target: Function): boolean {
 }
 
 /**
+ * Extract and merge metadata for a list of target
+ *
+ * @param target
+ */
+function extractMetadata(target: Function[]): Record<string, any> {
+    return toArray(target)
+        .map((f) => Reflect.getOwnMetadata(MOLD, f) || {})
+        .reduce((acc, cur) => ({ ...acc, ...cur }), {});
+}
+
+/**
  * requiredProperties
  *
  * Get the required property key list of a class
  *
  * @param target
  */
-function requiredProperties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+function requiredProperties(target: Function[]): string[] {
+    const metadata = extractMetadata(target);
     return Object.keys(metadata).filter((key) => ruleValue(REQUIRED, target, key));
 }
 
@@ -193,8 +205,8 @@ function requiredProperties(target: Function): string[] {
  * @param target
  * @param propertyKey
  */
-function rulesByProperty(target: Function, propertyKey: string): [string, any][] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+function rulesByProperty(target: Function[], propertyKey: string): [string, any][] {
+    const metadata = extractMetadata(target);
     const rules = metadata[propertyKey] || {};
     return Object.entries(rules);
 }
@@ -207,7 +219,7 @@ function rulesByProperty(target: Function, propertyKey: string): [string, any][]
  *
  * @param target
  */
-function buildProperties(target: Function): Record<string, any> {
+function buildProperties(target: Function[]): Record<string, any> {
     return properties(target)
         .map((key) =>
             rulesByProperty(target, key)
@@ -218,14 +230,26 @@ function buildProperties(target: Function): Record<string, any> {
 }
 
 /**
+ * Extract the parent list for a token
+ *
+ * @param token
+ */
+function extractParent(token: Function): Function[] {
+    const parent = Reflect.getOwnMetadata(PARENT, token);
+    if (parent) {
+        return [].concat(parent, extractParent(parent)).filter(Boolean);
+    }
+}
+
+/**
  * properties
  *
  * Get the property key list of a class
  *
  * @param target
  */
-export function properties(target: Function): string[] {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+export function properties(target: Function[]): string[] {
+    const metadata = extractMetadata(target);
     return Object.keys(metadata);
 }
 
@@ -233,16 +257,17 @@ export function properties(target: Function): string[] {
  * extractSchema
  *
  * Use all the stored rules in metadata
- * to build a JSON Schema
+ * to build a JSON Schema with inheritance
  *
  * @param target
  */
 export function extractSchema(target: Function): Record<string, any> {
+    const tokens = toArray(target).concat(...toArray(extractParent(target)));
     return {
         title: target.name,
         type: 'object',
-        properties: buildProperties(target),
-        required: requiredProperties(target),
+        properties: buildProperties(tokens),
+        required: requiredProperties(tokens),
         additionalProperties: false
     };
 }
@@ -256,8 +281,8 @@ export function extractSchema(target: Function): Record<string, any> {
  * @param target
  * @param propertyKey
  */
-export function ruleValue(rule: string, target: Function, propertyKey: string): any {
-    const metadata = Reflect.getMetadata(MOLD, target) || {};
+export function ruleValue(rule: string, target: Function[], propertyKey: string): any {
+    const metadata = extractMetadata(target);
     const rules = metadata[propertyKey] || {};
     return rules[rule];
 }
