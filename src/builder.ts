@@ -241,25 +241,6 @@ function extractParent(token: Function): Function[] {
     }
 }
 
-// function inheritanceSchema(token: Function, parents: Function[]): Record<string, any> {
-//     const schemas = []
-//         .concat(parents)
-//         .filter(Boolean)
-//         .map(extractOnlySchema)
-//         .reduce(
-//             (acc, current) => ({ definitions: { ...acc.definitions, [current.title]: current } }),
-//             {}
-//         );
-//     return {
-//         ...schemas,
-//         allOf: []
-//             .concat(parents)
-//             .filter(Boolean)
-//             .map((parent) => ({ $ref: `#/definitions/${parent.name}` }))
-//             .concat(extractOnlySchema(token) as any)
-//     };
-// }
-
 /**
  * properties
  *
@@ -282,11 +263,6 @@ export function properties(target: Function[]): string[] {
  */
 export function extractSchema(target: Function): Record<string, any> {
     const tokens = toArray(target).concat(...toArray(extractParent(target)));
-    // return {
-    //     ...(parents && parents.length > 0
-    //         ? inheritanceSchema(target, parents)
-    //         : extractOnlySchema(target))
-    // };
     return {
         title: target.name,
         type: 'object',
