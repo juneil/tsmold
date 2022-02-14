@@ -1,7 +1,5 @@
 import { Simple, Required, Min, Max, Item, Enum, ExtendRules } from '../src/decorators';
 import { Molder } from '../src/mold';
-import { MOLD } from '../src/constants';
-import { extractSchema } from '../src/builder';
 
 describe('Molder tests', () => {
     test('Class inheritance', () => {

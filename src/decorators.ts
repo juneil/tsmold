@@ -61,7 +61,7 @@ function extendRules(parent: Function) {
  *
  * @param rule
  */
-const withoutArg = (rule?: string) => {
+export const withoutArg = (rule?: string) => {
     return (target: any, key: string): void => {
         defineTypeMetadata(target, key);
         if (rule) {
@@ -76,12 +76,14 @@ const withoutArg = (rule?: string) => {
  *
  * @param rule
  */
-const with1Arg = <T>(rule: string) => (value: T) => {
-    return (target: any, key: string): void => {
-        defineTypeMetadata(target, key);
-        addRule(target.constructor, key, rule, value);
+export const with1Arg =
+    <T>(rule: string) =>
+    (value: T) => {
+        return (target: any, key: string): void => {
+            defineTypeMetadata(target, key);
+            addRule(target.constructor, key, rule, value);
+        };
     };
-};
 
 /**
  * Create a decorator with N arguments
@@ -89,12 +91,14 @@ const with1Arg = <T>(rule: string) => (value: T) => {
  *
  * @param rule
  */
-const withNArg = <T>(rule: string) => (...values: T[]) => {
-    return (target: any, key: string): void => {
-        defineTypeMetadata(target, key);
-        addRule(target.constructor, key, rule, values);
+export const withNArg =
+    <T>(rule: string) =>
+    (...values: T[]) => {
+        return (target: any, key: string): void => {
+            defineTypeMetadata(target, key);
+            addRule(target.constructor, key, rule, values);
+        };
     };
-};
 
 export const ExtendRules = extendRules;
 export const Simple = withoutArg();
